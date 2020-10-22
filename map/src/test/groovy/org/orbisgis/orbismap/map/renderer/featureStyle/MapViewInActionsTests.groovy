@@ -46,6 +46,7 @@ import org.orbisgis.orbisdata.datamanager.jdbc.h2gis.H2GIS
 import org.orbisgis.orbismap.style.Feature2DRule
 import org.orbisgis.orbismap.style.Feature2DStyle
 import org.orbisgis.orbismap.feature2dstyle.io.Feature2DStyleIO
+import org.orbisgis.orbismap.style.Uom
 import org.orbisgis.orbismap.style.fill.SolidFill
 import org.orbisgis.orbismap.style.parameter.Literal
 import org.orbisgis.orbismap.style.parameter.NullParameterValue
@@ -73,14 +74,26 @@ class MapViewInActionsTests {
     void createMapView(TestInfo testInfo) throws Exception {
         H2GIS h2GIS = H2GIS.open("./target/mapview")
         String inputFile = new File(this.getClass().getResource("landcover2000.shp").toURI()).getAbsolutePath();
-        h2GIS.link(new File(inputFile), "LANDCOVER", true)
-        ISpatialTable spatialTable =h2GIS.getSpatialTable("LANDCOVER")
+        inputFile="/home/ebocher/Autres/data/IGN/data_cadastre/parc_dgi/Parc_dgi.shp"
+        def inputFile2="/home/ebocher/Autres/data/DONNEES RENNES/Reseau_Rennes.shp"
+        //inputFile ="/home/ebocher/Documents/NextCloud/Groupe_SIG_Vannes/Projets_de_recherche/En_cours/2017_PAENDORA/Reunions/2017_11_08_Construction_USR/IRIS-GE_2-0__SHP_LAMB93_D056_2016-01-01/IRIS-GE/1_DONNEES_LIVRAISON_2017-05-00243/IRIS-GE_2-0_SHP_LAMB93_D056-2016/IRIS_GE.SHP"
+
+        h2GIS.link(new File(inputFile), "PARCELS", true)
+        h2GIS.link(new File(inputFile2), "ROADS", true)
+
+        ISpatialTable spatialTable =h2GIS.getSpatialTable("PARCELS")
+        ISpatialTable spatialTable2 =h2GIS.getSpatialTable("ROADS")
+
         MapView mapView = new MapView()
-        Feature2DStyle style = StylesForTest.createAreaSymbolizer(Color.yellow, 1, 0,Color.BLACK,1);
+        Feature2DStyle style = StylesForTest.createLineSymbolizer(Color.ORANGE, 1, 0, Uom.PX);
         StyledLayer styledLayer = new StyledLayer(spatialTable, style)
-        mapView << styledLayer
+        Feature2DStyle style2 = StylesForTest.createAreaSymbolizer(Color.yellow, 1, 0, Color.BLACK, 1);
+        StyledLayer styledLayer2 = new StyledLayer(spatialTable2, style2)
+        //mapView << styledLayer
+        mapView << styledLayer2
         mapView.draw();
-        //mapView.show();
+        println(mapView.getEnvelope().toString())
+        mapView.show();
         mapView.save("./target"+File.separator+ testInfo.getDisplayName()+".png")
     }
 

@@ -73,8 +73,12 @@ public class MapEnvelope extends Envelope implements IMapEnvelope{
     public void setSrid(int srid) {
         this.srid = srid;
     }
-    
-    
-    
-    
+
+
+    @Override
+    public String toString() {
+        return "MapEnvelope{" +
+                "srid=" + srid + "; "+ super.toString()+
+                '}';
+    }
 }

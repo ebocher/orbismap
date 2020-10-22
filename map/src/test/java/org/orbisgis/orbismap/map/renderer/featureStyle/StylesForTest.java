@@ -303,7 +303,7 @@ public class StylesForTest {
         return style;
     }
 
-    public static Feature2DStyle createAreaSymbolizer(Color fillColor, float opacity, double offset, Color strokeColor, float strokeWidth) {
+    public static Feature2DStyle  createAreaSymbolizer(Color fillColor, float opacity, double offset, Color strokeColor, float strokeWidth) {
         Feature2DStyle style = new Feature2DStyle();
         style.setName("Single symbol map");
         AreaSymbolizer areaSymbolizer = new AreaSymbolizer();

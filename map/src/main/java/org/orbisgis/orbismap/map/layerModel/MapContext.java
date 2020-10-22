@@ -146,6 +146,14 @@ public final class MapContext implements IMapContext<Description, MapEnvelope> {
     }
 
     /**
+     * Set the EPSG code
+     * @param srid
+     */
+    public void setSrid(int srid){
+
+    }
+
+    /**
      * Set the value of the EPSG code
      *
      * @param epsg new value of the EPSG code

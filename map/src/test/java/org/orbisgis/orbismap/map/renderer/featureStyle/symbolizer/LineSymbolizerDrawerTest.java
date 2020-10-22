@@ -109,9 +109,7 @@ public class LineSymbolizerDrawerTest extends DrawerBaseTest {
         lineSymbolizerDrawer.draw(g2, mapTransform, lineSymbolizerGraphicStroke);
         saveImage(testInfo);
     }
-    
-    
-    
+
     @Test
     public void drawLineSymbolizerGraphicStrokeAnchorLowerLeft(TestInfo testInfo) throws Exception {
         LineSymbolizer lineSymbolizerBase = new LineSymbolizer();

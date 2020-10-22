@@ -109,6 +109,7 @@ public class MapView  implements IRenderer{
         g2.fillRect(0, 0, width, height);
         g2.addRenderingHints(mt.getRenderingHints());                
         mc.getLayerModel().draw(g2, mt, new NullProgressMonitor());
+        g2.dispose();
     }
 
     public BufferedImage getImage() {
@@ -252,5 +253,13 @@ public class MapView  implements IRenderer{
         else if(object!=null && object instanceof StyledLayer){
             mc.add((StyledLayer) object);
         }
+    }
+
+    /**
+     *
+     * @param epsgCode
+     */
+    public void setEPSG(int epsgCode){
+            mc.setSrid(epsgCode);
     }
 }

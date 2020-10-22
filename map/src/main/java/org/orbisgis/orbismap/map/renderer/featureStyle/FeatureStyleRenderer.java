@@ -51,14 +51,12 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import net.sf.jsqlparser.JSQLParserException;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.TopologyException;
 import org.orbisgis.orbismap.map.layerModel.MapTransform;
 import org.orbisgis.orbismap.map.renderer.featureStyle.symbolizer.PointSymbolizerDrawer;
 import org.orbisgis.orbismap.map.renderer.featureStyle.symbolizer.TextSymbolizerDrawer;
 import org.orbisgis.orbismap.style.Feature2DStyle;
 import org.orbisgis.orbismap.style.Feature2DRule;
 import org.orbisgis.orbismap.map.api.IProgressMonitor;
-import org.orbisgis.orbismap.map.renderer.featureStyle.utils.ExpressionParser;
 import org.orbisgis.orbisdata.datamanager.api.dataset.ISpatialTable;
 import org.orbisgis.orbismap.style.parameter.RuleFilter;
 import org.orbisgis.orbismap.style.parameter.geometry.GeometryParameter;
@@ -334,8 +332,7 @@ public class FeatureStyleRenderer {
                 }
             }
             ruleIndex++;
-        } 
-        g2.dispose();
+        }
     }
 
     /**
