@@ -221,5 +221,32 @@ public class GraphicStrokeDrawerTest extends DrawerBaseTest {
         saveImage(testInfo);
     }
 
+    @Test
+    public void drawGraphicStrokeRail(TestInfo testInfo) throws Exception {
+        GraphicStroke graphicStroke = new GraphicStroke();
+        graphicStroke.setUom(Uom.PX);
+        graphicStroke.setDistance(10);
+        MarkGraphic markGraphic = createMarkGraphic("VERTLINE", 20);
+        graphicStroke.addGraphic(markGraphic);
+        GraphicStrokeDrawer graphicStrokeDrawer = new GraphicStrokeDrawer();
+        graphicStrokeDrawer.setShape(getSimpleaAxisLine());
+        graphicStrokeDrawer.draw(g2, mapTransform, graphicStroke);
+        saveImage(testInfo);
+    }
+
+    @Test
+    public void drawGraphicStrokeOffset(TestInfo testInfo) throws Exception {
+        GraphicStroke graphicStroke = new GraphicStroke();
+        graphicStroke.setUom(Uom.PX);
+        graphicStroke.setDistance(10);
+        graphicStroke.setOffset(50);
+        MarkGraphic markGraphic = createMarkGraphic("SQUARE", 20);
+        graphicStroke.addGraphic(markGraphic);
+        GraphicStrokeDrawer graphicStrokeDrawer = new GraphicStrokeDrawer();
+        graphicStrokeDrawer.setShape(getSimpleaAxisLine());
+        graphicStrokeDrawer.draw(g2, mapTransform, graphicStroke);
+        saveImage(testInfo);
+    }
+
 
 }

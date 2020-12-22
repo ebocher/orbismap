@@ -43,11 +43,15 @@ import org.orbisgis.orbismap.map.renderer.MapView
 import org.junit.jupiter.api.Test
 import org.orbisgis.orbisdata.datamanager.api.dataset.ISpatialTable
 import org.orbisgis.orbisdata.datamanager.jdbc.h2gis.H2GIS
+import org.orbisgis.orbismap.map.renderer.featureStyle.utils.ExpressionParser
 import org.orbisgis.orbismap.style.Feature2DRule
 import org.orbisgis.orbismap.style.Feature2DStyle
 import org.orbisgis.orbismap.feature2dstyle.io.Feature2DStyleIO
 import org.orbisgis.orbismap.style.Uom
+import org.orbisgis.orbismap.style.fill.DotMapFill
 import org.orbisgis.orbismap.style.fill.SolidFill
+import org.orbisgis.orbismap.style.graphic.MarkGraphic
+import org.orbisgis.orbismap.style.graphic.graphicSize.ViewBox
 import org.orbisgis.orbismap.style.parameter.Literal
 import org.orbisgis.orbismap.style.parameter.NullParameterValue
 import org.orbisgis.orbismap.style.stroke.PenStroke
@@ -86,9 +90,9 @@ class MapViewInActionsTests {
 
         MapView mapView = new MapView()
         Feature2DStyle style = StylesForTest.createLineSymbolizer(Color.ORANGE, 1, 0, Uom.PX);
-        StyledLayer styledLayer = new StyledLayer(spatialTable, style)
+        //StyledLayer styledLayer = new StyledLayer(spatialTable, style)
         Feature2DStyle style2 = StylesForTest.createAreaSymbolizer(Color.yellow, 1, 0, Color.BLACK, 1);
-        StyledLayer styledLayer2 = new StyledLayer(spatialTable2, style2)
+        StyledLayer styledLayer2 = new StyledLayer(spatialTable2, style)
         //mapView << styledLayer
         mapView << styledLayer2
         mapView.draw();
@@ -200,4 +204,45 @@ class MapViewInActionsTests {
         mapView.save("./target"+File.separator+ testInfo.getDisplayName()+".png")
         //mapView.show();
     }
+
+    @Test
+    void displayDotMap(TestInfo testInfo) throws Exception {
+        H2GIS h2GIS = H2GIS.open("./target/mapview")
+        String inputFile = new File(this.getClass().getResource("landcover2000.shp").toURI()).getAbsolutePath();
+        h2GIS.link(inputFile, "LANDCOVER", true)
+        ISpatialTable spatialTable = h2GIS.getSpatialTable("LANDCOVER")
+        MapView mapView = new MapView()
+        def fillColorExperssion = "CASE WHEN runoff_sum<=0.05 THEN '#1a9641'" +
+                " WHEN runoff_sum>0.05 and runoff_sum<0.2 THEN '#ffffc0'" +
+                " WHEN runoff_sum>=0.2 and runoff_sum<0.4 THEN '#fdae61'" +
+                "ELSE '#d7191c' END "
+        def dotQuantityExpression =  "ST_AREA(THE_GEOM)"
+        Feature2DStyle style = StylesForTest.createAreaSymbolizerDotFillStyle(dotQuantityExpression, fillColorExperssion)
+        StyledLayer styledLayer = new StyledLayer(spatialTable, style)
+        mapView << styledLayer
+        mapView.draw();
+        mapView.save("./target"+File.separator+ testInfo.getDisplayName()+".png")
+        Feature2DStyleIO.toJSON(style, new File("./target"+File.separator+ testInfo.getDisplayName()+".json"));
+    }
+
+    @Test
+    void displayRailStyle(TestInfo testInfo) throws Exception {
+        H2GIS h2GIS = H2GIS.open("./target/mapview")
+        String inputFile = new File(this.getClass().getResource("landcover2000.shp").toURI()).getAbsolutePath();
+        h2GIS.link(inputFile, "LANDCOVER", true)
+        ISpatialTable spatialTable = h2GIS.getSpatialTable("LANDCOVER")
+        MapView mapView = new MapView()
+        def fillColorExperssion = "CASE WHEN runoff_sum<=0.05 THEN '#1a9641'" +
+                " WHEN runoff_sum>0.05 and runoff_sum<0.2 THEN '#ffffc0'" +
+                " WHEN runoff_sum>=0.2 and runoff_sum<0.4 THEN '#fdae61'" +
+                "ELSE '#d7191c' END "
+        def dotQuantityExpression =  "ST_AREA(THE_GEOM)"
+        Feature2DStyle style = StylesForTest.createAreaSymbolizerDotFillStyle(dotQuantityExpression, fillColorExperssion)
+        StyledLayer styledLayer = new StyledLayer(spatialTable, style)
+        mapView << styledLayer
+        mapView.draw();
+        mapView.save("./target"+File.separator+ testInfo.getDisplayName()+".png")
+        Feature2DStyleIO.toJSON(style, new File("./target"+File.separator+ testInfo.getDisplayName()+".json"));
+    }
+
     }

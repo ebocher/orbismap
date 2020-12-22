@@ -77,11 +77,17 @@ public class GraphicStrokeDrawer implements IStrokeDrawer<GraphicStroke> {
             if (rOrient == null) {
                 rOrient = RelativeOrientation.PORTRAYAL;
             }
+            Float offset = (Float) styleNode.getOffset().getValue();
+            if(offset==null){
+                offset=0f;
+            }else{
+                offset = UomUtils.toPixel(offset, uom, mapTransform.getDpi(), mapTransform.getScaleDenominator());
+            }
             Float distance = (Float) styleNode.getDistance().getValue();
             boolean isOverlap = (boolean) styleNode.isOverlap().getValue();
             if (distance != null && Math.abs(distance) > 0) {
                 MarkGraphicStroke markGraphicStroke = new MarkGraphicStroke(graphics, mapTransform,
-                        UomUtils.toPixel(distance, uom, mapTransform.getDpi(), mapTransform.getScaleDenominator()));
+                        UomUtils.toPixel(distance, uom, mapTransform.getDpi(), mapTransform.getScaleDenominator()), offset);
                 markGraphicStroke.draw(shape, g2, rOrient, isOverlap);
             }
         }
@@ -106,15 +112,17 @@ public class GraphicStrokeDrawer implements IStrokeDrawer<GraphicStroke> {
 
         public Map<Graphic, IGraphicDrawer> drawerMap;
         private float advance;
+        private float offset;
         private boolean repeat = true;
         private AffineTransform t = new AffineTransform();
         private static final float FLATNESS = 1;
         private final MapTransform mapTransform;
         private final GraphicCollection graphics;
 
-        public MarkGraphicStroke(GraphicCollection graphics, MapTransform mapTransform, float advance) throws ParameterException {
+        public MarkGraphicStroke(GraphicCollection graphics, MapTransform mapTransform, float advance, float offset) throws ParameterException {
             this.mapTransform = mapTransform;
             this.advance = advance;
+            this.offset=offset;
             this.graphics = graphics;
             initDrawer(graphics);
         }
@@ -146,7 +154,7 @@ public class GraphicStrokeDrawer implements IStrokeDrawer<GraphicStroke> {
                         moveX = lastX = points[0];
                         moveY = lastY = points[1];
                         first = true;
-                        next = 0;
+                        next = 0+offset;
                         break;
 
                     case PathIterator.SEG_CLOSE:

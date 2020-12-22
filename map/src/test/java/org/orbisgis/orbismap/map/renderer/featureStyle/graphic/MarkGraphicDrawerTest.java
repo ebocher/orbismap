@@ -38,6 +38,7 @@ package org.orbisgis.orbismap.map.renderer.featureStyle.graphic;
 import java.awt.BasicStroke;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 
 import org.junit.jupiter.api.Disabled;
@@ -72,7 +73,22 @@ public class MarkGraphicDrawerTest extends DrawerBaseTest {
         assertEquals(50, makShape.getBounds2D().getWidth());
         saveImage(testInfo);
     }
-    
-    
-    
+
+    @Test
+    public void drawMarkGraphicArrow(TestInfo testInfo) throws Exception {
+        MarkGraphicDrawer markGraphicDrawer = new MarkGraphicDrawer();
+        MarkGraphic markGraphic =createMarkGraphic("arrow", 50);
+        Shape shape = getPoint();
+        Rectangle2D bounds = shape.getBounds2D();
+        markGraphicDrawer.setAffineTransform(AffineTransform.getTranslateInstance(bounds.getX(), bounds.getY()));
+        markGraphicDrawer.draw(g2, mapTransform, markGraphic);
+        BasicStroke stroke = (BasicStroke) g2.getStroke();
+        assertEquals((float) ((PenStroke)markGraphic.getStroke()).getWidth().getValue(), stroke.getLineWidth());
+        Shape makShape = markGraphicDrawer.getShape( mapTransform,markGraphic);
+        assertTrue(makShape instanceof GeneralPath);
+        assertEquals(50, makShape.getBounds2D().getHeight());
+        assertEquals(50, makShape.getBounds2D().getWidth());
+        saveImage(testInfo);
+    }
+
 }

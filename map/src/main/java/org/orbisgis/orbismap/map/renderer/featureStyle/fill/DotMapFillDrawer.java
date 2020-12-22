@@ -43,6 +43,7 @@ import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Random;
+
 import org.orbisgis.orbismap.map.layerModel.MapTransform;
 import org.orbisgis.orbismap.map.renderer.featureStyle.AbstractDrawerFinder;
 import org.orbisgis.orbismap.map.renderer.featureStyle.IFillDrawer;
@@ -82,15 +83,12 @@ public class DotMapFillDrawer extends AbstractDrawerFinder<IGraphicCollectionDra
                     if (perMark == null || total == null) {
                         throw new ParameterException("Dot Map Fill: missing parameters !!!");
                     }
-
                     int nb = (int) Math.round(total / perMark);
-
                     Area area = new Area(shape);
-
                     if (rand == null) {
                         rand = new Random();
                     }
-                    // setting the seed to the scale denom will ensure that mark will not move when panning
+                    // setting the seed to the scale denominator will ensure that mark will not move when panning
                     rand.setSeed((long) mapTransform.getScaleDenominator());
                     for (int i = 0; i < nb; i++) {
                         Point2D.Double pos = findMarkPosition(area);
@@ -112,11 +110,9 @@ public class DotMapFillDrawer extends AbstractDrawerFinder<IGraphicCollectionDra
      */
     private Point2D.Double findMarkPosition(Area area) {
         Rectangle2D bounds2D = area.getBounds2D();
-
         for (int i = 0; i < MAX_ATTEMPT; i++) {
             double x = rand.nextDouble() * bounds2D.getWidth() + bounds2D.getMinX();
             double y = rand.nextDouble() * bounds2D.getHeight() + bounds2D.getMinY();
-
             if (area.contains(x, y)) {
                 return new Point2D.Double(x, y);
             }

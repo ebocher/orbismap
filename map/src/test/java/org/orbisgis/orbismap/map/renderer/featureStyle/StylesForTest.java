@@ -488,6 +488,35 @@ public class StylesForTest {
         return style;
     }
 
+    public static Feature2DStyle createAreaSymbolizerDotFillStyle(String dotQuantityExpression, String fillColorExpression ) {
+        Feature2DStyle style = new Feature2DStyle();
+        AreaSymbolizer areaSymbolizer = new AreaSymbolizer();
+        areaSymbolizer.setGeometryParameter("the_geom");
+        DotMapFill dotMapFill = new DotMapFill();
+        MarkGraphic mg = new MarkGraphic();
+        Expression colorExpression = new Expression(fillColorExpression);
+        SolidFill solidFill = new SolidFill();
+        HexaColor hexaColor = new HexaColor();
+        hexaColor.setHexaColor(colorExpression);
+        solidFill.setColor(hexaColor);
+        solidFill.setOpacity(1.0f);
+        mg.setFill(solidFill);
+        mg.setWellKnownName(new Literal("circle"));
+        mg.setUom(Uom.PX);
+        mg.setGraphicSize(new ViewBox(1f));
+        dotMapFill.addGraphic(mg);
+        dotMapFill.setQuantityPerMark(new Literal(100));
+        dotMapFill.setTotalQuantity(new Expression(dotQuantityExpression));
+        areaSymbolizer.setFill(dotMapFill);
+        PenStroke ps = new PenStroke();
+        ps.setWidth(new Literal(1.0f));
+        ps.setFill(createSolidFill(Color.BLACK));
+        Feature2DRule rule = new Feature2DRule();
+        rule.addSymbolizer(areaSymbolizer);
+        style.addRule(rule);
+        return style;
+    }
+
     public static Feature2DStyle createTextSymbolizerColorExpression() {
         Feature2DStyle style = new Feature2DStyle();
         TextSymbolizer textSymbolizer = new TextSymbolizer();
@@ -1009,6 +1038,33 @@ public class StylesForTest {
         areaSymbolizer.setStroke(ps);
         Feature2DRule rule = new Feature2DRule();
         rule.addSymbolizer(areaSymbolizer);
+        style.addRule(rule);
+        return style;
+    }
+
+    static Feature2DStyle createRailStyle(float markSize, float distance) {
+        Feature2DStyle style = new Feature2DStyle();
+        LineSymbolizer lineSymbolizerBase = new LineSymbolizer();
+        lineSymbolizerBase.setUom(Uom.MM);
+        lineSymbolizerBase.setGeometryParameter("the_geom");
+        lineSymbolizerBase.setStroke(createPenStroke(Color.BLACK, 0.04f, Uom.MM));
+        LineSymbolizer lineSymbolizer = new LineSymbolizer();
+        lineSymbolizer.setGeometryParameter("the_geom");
+        lineSymbolizer.setUom(Uom.MM);
+        GraphicStroke graphicStroke = new GraphicStroke();
+        graphicStroke.setUom(Uom.MM);
+        graphicStroke.setRelativeOrientation(RelativeOrientation.NORMAL_UP);
+        graphicStroke.setDistance(distance);
+        MarkGraphic railMark = new MarkGraphic();
+        railMark.setWellKnownName(new Literal("VERTLINE"));
+        railMark.setGraphicSize(new ViewBox(markSize));
+        railMark.setStroke(createPenStroke(Color.BLACK, 0.02f, Uom.MM));
+        railMark.setUom(Uom.MM);
+        graphicStroke.addGraphic(railMark);
+        lineSymbolizer.setStroke(graphicStroke);
+        Feature2DRule rule = new Feature2DRule();
+        rule.addSymbolizer(lineSymbolizer);
+        rule.addSymbolizer(lineSymbolizerBase);
         style.addRule(rule);
         return style;
     }

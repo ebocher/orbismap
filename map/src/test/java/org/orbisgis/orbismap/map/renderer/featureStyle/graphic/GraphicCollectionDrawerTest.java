@@ -39,6 +39,7 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -72,7 +73,6 @@ public class GraphicCollectionDrawerTest extends DrawerBaseTest {
         Rectangle2D bounds = shape.getBounds2D();
         graphicCollectionDrawer.setAffineTransform(AffineTransform.getTranslateInstance(bounds.getX(), bounds.getY()));
         graphicCollectionDrawer.draw(g2, mapTransform, graphicCollection);
-
         MarkGraphicDrawer markDrawer = (MarkGraphicDrawer) graphicCollectionDrawer.getDrawer(circle);
         Shape makShape = markDrawer.getShape(mapTransform,circle);
         assertTrue(makShape instanceof Ellipse2D);
@@ -83,6 +83,29 @@ public class GraphicCollectionDrawerTest extends DrawerBaseTest {
         assertTrue(makShape instanceof Polygon);
         assertEquals(40, makShape.getBounds2D().getHeight());
         assertEquals(40, makShape.getBounds2D().getWidth());
+        saveImage(testInfo);
+    }
+    @Test
+    public void drawGraphicCollectionTest2(TestInfo testInfo) throws Exception {
+        GraphicCollection graphicCollection = new GraphicCollection();
+        graphicCollection.setUom(Uom.PX);
+        MarkGraphic square = createMarkGraphic("SQUARE", 50);
+        MarkGraphic arrow = createMarkGraphic("ARROW", 50);
+        graphicCollection.add(square);
+        graphicCollection.add(arrow);
+        GraphicCollectionDrawer graphicCollectionDrawer = new GraphicCollectionDrawer();
+        Shape shape = getPoint();
+        Rectangle2D bounds = shape.getBounds2D();
+        graphicCollectionDrawer.setAffineTransform(AffineTransform.getTranslateInstance(bounds.getX(), bounds.getY()));
+        graphicCollectionDrawer.draw(g2, mapTransform, graphicCollection);
+        MarkGraphicDrawer markDrawer = (MarkGraphicDrawer) graphicCollectionDrawer.getDrawer(square);
+        Shape makShape = markDrawer.getShape(mapTransform,square);
+        assertEquals(50, makShape.getBounds2D().getHeight());
+        assertEquals(50, makShape.getBounds2D().getWidth());
+        markDrawer = (MarkGraphicDrawer) graphicCollectionDrawer.getDrawer(arrow);
+        makShape = markDrawer.getShape(mapTransform,arrow );
+        assertEquals(50, makShape.getBounds2D().getHeight());
+        assertEquals(50, makShape.getBounds2D().getWidth());
         saveImage(testInfo);
     }
 
